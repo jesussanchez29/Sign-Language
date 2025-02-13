@@ -7,7 +7,7 @@ import gdown
 # Descargar el modelo desde Google Drive
 @st.cache_resource
 def load_model():
-    url = https://drive.google.com/drive/u/5/folders/1kqsVBlQ6u1KppyS42XxSWP_hN-Zyp65u"  # Reemplaza con tu ID de Drive
+    url = "https://drive.google.com/drive/folders/1kqsVBlQ6u1KppyS42XxSWP_hN-Zyp65u?usp=sharing"  # Reemplaza con tu ID de Drive
     output = "model.h5"
     gdown.download(url, output, quiet=False)
     return tf.keras.models.load_model(output)
