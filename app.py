@@ -2,11 +2,15 @@ import streamlit as st
 import tensorflow as tf
 import numpy as np
 from PIL import Image
+import gdown
 
-# Cargar el modelo
+# Descargar el modelo desde Google Drive
 @st.cache_resource
 def load_model():
-    return tf.keras.models.load_model("model.h5")
+    url = https://drive.google.com/drive/u/5/folders/1kqsVBlQ6u1KppyS42XxSWP_hN-Zyp65u"  # Reemplaza con tu ID de Drive
+    output = "model.h5"
+    gdown.download(url, output, quiet=False)
+    return tf.keras.models.load_model(output)
 
 model = load_model()
 
