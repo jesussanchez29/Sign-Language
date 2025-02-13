@@ -43,8 +43,8 @@ if uploaded_file is not None:
     image = Image.open(uploaded_file).convert("RGB")
     st.image(image, caption="Imagen subida", use_column_width=True)
 
-    # Redimensionar la imagen al tamaño esperado por el modelo
-    image = image.resize((64, 64))  # Ajusta esto según el tamaño que espera tu modelo
+    # Redimensionar la imagen al tamaño esperado por el modelo (100x100 en lugar de 64x64)
+    image = image.resize((100, 100))  # Ahora redimensionamos a 100x100
 
     # Convertir imagen a numpy array y normalizar
     image_array = np.array(image) / 255.0  # Normalización
