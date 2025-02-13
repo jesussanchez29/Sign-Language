@@ -42,10 +42,17 @@ if uploaded_file is not None:
     image = Image.open(uploaded_file).convert("RGB")
     st.image(image, caption="Imagen subida", use_column_width=True)
     
-    # Preprocesamiento de la imagen (ajústalo a las dimensiones de tu modelo)
-    image = image.resize((64, 64))  # Cambia al tamaño correcto
-    image_array = np.array(image) / 255.0  # Normalización
-    image_array = np.expand_dims(image_array, axis=0)  # Agregar batch dimension
+    # Asegurar que tiene 3 canales (RGB)
+    image = image.resize((64, 64)).convert("RGB")
+
+    # Convertir a array de numpy y verificar la forma
+    image_array = np.array(image) / 255.0  # Normalización entre 0 y 1
+    st.write(f"Forma de la imagen antes de expand_dims: {image_array.shape}")
+
+    # Expandir para batch (asegurar que es (1, height, width, channels))
+    image_array = np.expand_dims(image_array, axis=0)
+    st.write(f"Forma de la imagen final: {image_array.shape}")
+
     
     # Hacer la predicción
     prediction = model.predict(image_array)
