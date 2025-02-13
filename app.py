@@ -39,11 +39,12 @@ st.write("Sube una imagen de un número en lenguaje de señas y el modelo lo ide
 uploaded_file = st.file_uploader("Subir imagen", type=["jpg", "png", "jpeg"])
 
 if uploaded_file is not None:
+    # Abrir y mostrar la imagen subida
     image = Image.open(uploaded_file).convert("RGB")
     st.image(image, caption="Imagen subida", use_column_width=True)
 
     # Redimensionar la imagen al tamaño esperado por el modelo
-    image = image.resize((64, 64))  # Ajusta esto según la arquitectura del modelo
+    image = image.resize((64, 64))  # Ajusta esto según el tamaño que espera tu modelo
 
     # Convertir imagen a numpy array y normalizar
     image_array = np.array(image) / 255.0  # Normalización
@@ -54,12 +55,8 @@ if uploaded_file is not None:
     st.write(f"Forma esperada por el modelo: {model.input_shape}")
     st.write(f"Forma de la imagen final antes de predecir: {image_array.shape}")
 
-    # Si el modelo usa "channels_first", mover los ejes
-    if model.input_shape[1] == 3:
-        image_array = np.transpose(image_array, (0, 3, 1, 2))
-
     # Hacer la predicción
     prediction = model.predict(image_array)
-    predicted_class = CLASSES[np.argmax(prediction)]
+    predicted_class = CLASSES[np.argmax(prediction)]  # Obtener la clase predicha
 
     st.write(f"### Número predicho: {predicted_class}")
