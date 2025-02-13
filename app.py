@@ -41,21 +41,25 @@ uploaded_file = st.file_uploader("Subir imagen", type=["jpg", "png", "jpeg"])
 if uploaded_file is not None:
     image = Image.open(uploaded_file).convert("RGB")
     st.image(image, caption="Imagen subida", use_column_width=True)
-    
-    # Asegurar que tiene 3 canales (RGB)
-    image = image.resize((64, 64)).convert("RGB")
 
-    # Convertir a array de numpy y verificar la forma
-    image_array = np.array(image) / 255.0  # Normalización entre 0 y 1
-    st.write(f"Forma de la imagen antes de expand_dims: {image_array.shape}")
+    # Redimensionar la imagen al tamaño esperado por el modelo
+    image = image.resize((64, 64))  # Ajusta esto según la arquitectura del modelo
 
-    # Expandir para batch (asegurar que es (1, height, width, channels))
-    image_array = np.expand_dims(image_array, axis=0)
-    st.write(f"Forma de la imagen final: {image_array.shape}")
+    # Convertir imagen a numpy array y normalizar
+    image_array = np.array(image) / 255.0  # Normalización
+    image_array = np.expand_dims(image_array, axis=0)  # Agregar batch dimension
+    image_array = image_array.astype(np.float32)  # Asegurar tipo correcto
 
-    
+    # Verificar forma esperada por el modelo
+    st.write(f"Forma esperada por el modelo: {model.input_shape}")
+    st.write(f"Forma de la imagen final antes de predecir: {image_array.shape}")
+
+    # Si el modelo usa "channels_first", mover los ejes
+    if model.input_shape[1] == 3:
+        image_array = np.transpose(image_array, (0, 3, 1, 2))
+
     # Hacer la predicción
     prediction = model.predict(image_array)
     predicted_class = CLASSES[np.argmax(prediction)]
-    
+
     st.write(f"### Número predicho: {predicted_class}")
