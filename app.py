@@ -3,16 +3,32 @@ import tensorflow as tf
 import numpy as np
 from PIL import Image
 import gdown
+import os
 
 # Descargar el modelo desde Google Drive
 @st.cache_resource
 def load_model():
-    url = "https://drive.google.com/file/d/1-0iftuf3V0yrH5Ny61m5AG15KT9mUVXH/view?usp=sharing"  # Reemplaza con tu ID de Drive
+    url = "https://drive.google.com/file/d/1-5wwsrLwl58SWvXpvZh6tFZEh0KWHLjs/view?usp=sharing"  # Reemplaza con tu ID de Drive
     output = "model.h5"
+
+    # Descargar el modelo
     gdown.download(url, output, quiet=False)
-    return tf.keras.models.load_model(output)
+
+    # Verificar si el archivo se descargó correctamente
+    if not os.path.exists(output) or os.path.getsize(output) < 1000000:  # Ajusta el tamaño mínimo según tu modelo
+        st.error("Error al descargar el modelo. Verifica el ID de Google Drive y que el archivo sea público.")
+        return None
+
+    try:
+        return tf.keras.models.load_model(output)
+    except Exception as e:
+        st.error(f"Error al cargar el modelo: {str(e)}")
+        return None
 
 model = load_model()
+
+if model is None:
+    st.stop()  # Detiene la ejecución si el modelo no se carga correctamente
 
 # Clases de signos (ajústalas según tu modelo)
 CLASSES = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
