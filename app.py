@@ -8,7 +8,7 @@ import os
 # Descargar el modelo desde Google Drive
 @st.cache_resource
 def load_model():
-    url = "https://drive.google.com/file/d/1-5wwsrLwl58SWvXpvZh6tFZEh0KWHLjs/view?usp=sharing"  # Reemplaza con tu ID de Drive
+    url = "https://drive.google.com/uc?id=1-5wwsrLwl58SWvXpvZh6tFZEh0KWHLjs"
     output = "model.h5"
 
     # Descargar el modelo
